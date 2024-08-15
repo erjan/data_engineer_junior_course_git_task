@@ -1,1 +1,1 @@
-Data engineering junior course on stepik, test for git section
+Data engineering junior course on stepik, Scala section task
