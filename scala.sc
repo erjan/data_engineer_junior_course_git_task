@@ -1,7 +1,6 @@
 object StringProcessor {
-  // Функция для обработки строк
   def processStrings(strings: List[String]): List[String] = {
-    // Используем filter для выбора строк длиной более 3 символов и map для преобразования в верхний регистр
+// здесь применение фильтра и мап последовательно
     strings.filter(_.length > 3).map(_.toUpperCase)
   }
 
