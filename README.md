@@ -5,9 +5,6 @@
 ETL pipeline for processing sales data using Apache Airflow, PySpark, PostgreSQL, and ClickHouse. 
 Generates 1M sales records, processes them, and stores in databases.
 
-**Contact Information:**
-- Email: [your-email]
-- Telegram: [@username]
 
 ## Architecture
 
