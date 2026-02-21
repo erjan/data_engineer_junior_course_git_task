@@ -16,12 +16,11 @@ airflow.cfg
 webserver_config.py
 standalone_admin_password.txt
 
-# Data files - DO NOT commit large CSV files
+# Data files - DO NOT commit CSV files
 data/*.csv
 data/*.parquet
 data/*.json
-# Allow sample file for documentation
-!sales_data_sample.csv
+*.csv
 *.parquet
 
 # ClickHouse

@@ -59,7 +59,6 @@ nova_data_task1/
 ├── dags/
 │   └── sales_etl_pipeline.py    # main ETL DAG
 ├── data/                         # CSV files (generated at runtime)
-├── sales_data_sample.csv         # sample data (50 rows)
 ├── logs/                         # airflow logs
 ├── plugins/                      
 ├── config/                       
@@ -70,20 +69,38 @@ nova_data_task1/
 └── README.md                     
 ```
 
-## Data Sample
+## Data Sample (Срез данных)
 
-The pipeline generates 1M sales records dynamically. See [sales_data_sample.csv](sales_data_sample.csv) for data structure example (50 rows).
+The pipeline generates 1M sales records dynamically. Below is a sample of the data structure:
 
-**Columns:**
-- `sale_id` - unique sale identifier
-- `customer_id` - customer identifier (1-50000)
-- `product_id` - product identifier (1-1000)
+| sale_id | customer_id | product_id | quantity | sale_date  | sale_amount | region |
+|---------|-------------|------------|----------|------------|-------------|--------|
+| 550     | 14562       | 958        | 5        | 2025-10-06 | 1693.30     | East   |
+| 669     | 15734       | 8          | 3        | 2025-08-11 | 2025.24     | South  |
+| 733     | 767         | 545        | 7        | 2025-08-24 | 2178.75     | North  |
+| 790     | 24464       | 293        | 3        | 2026-02-11 | 1282.62     | East   |
+| 795     | 27073       | 10         | 9        | 2026-01-12 | 1189.71     | West   |
+| 982     | 39800       | 238        | 5        | 2026-02-08 | 658.35      | East   |
+| 1113    | 183         | 398        | 10       | 2025-05-24 | 7507.80     | North  |
+| 1413    | 1194        | 440        | 6        | 2025-04-17 | 5955.60     | East   |
+| 1447    | 47176       | 573        | 7        | 2025-08-23 | 6747.93     | West   |
+| 1490    | 9734        | 785        | 10       | 2026-02-08 | 581.30      | East   |
+| 1819    | 29469       | 241        | 5        | 2025-04-19 | 4976.75     | North  |
+| 1970    | 8323        | 294        | 4        | 2025-04-24 | 1708.68     | East   |
+| 2028    | 39717       | 545        | 8        | 2025-09-05 | 4929.76     | South  |
+| 2088    | 24078       | 644        | 3        | 2026-02-12 | 2888.52     | South  |
+| 2142    | 15036       | 399        | 6        | 2026-02-21 | 1792.92     | South  |
+
+**Data Schema:**
+- `sale_id` - unique sale identifier (1-1,000,000)
+- `customer_id` - customer identifier (1-50,000)
+- `product_id` - product identifier (1-1,000)
 - `quantity` - items purchased (1-10)
 - `sale_date` - date of sale (last 365 days)
-- `sale_amount` - total amount (quantity × price)
+- `sale_amount` - total amount = quantity × random_price
 - `region` - customer region (North, South, East, West, Central)
 
-Full CSV files are generated at runtime and excluded from git per .gitignore.
+CSV files are generated at runtime and excluded from git per .gitignore.
 
 ## Setup
 
