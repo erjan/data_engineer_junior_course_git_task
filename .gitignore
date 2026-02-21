@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Airflow
+logs/
+*.log
+airflow.db
+airflow.cfg
+webserver_config.py
+standalone_admin_password.txt
+
+# Data files - DO NOT commit large CSV files
+data/*.csv
+data/*.parquet
+data/*.json
+*.csv
+*.parquet
+
+# ClickHouse
+clickhouse_data/
+*.clickhouse
+
+# Docker
+.dockerignore
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment
+.env
+.env.local
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# PostgreSQL
+*.sql.backup
+pg_data/

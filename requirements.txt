@@ -1,0 +1,6 @@
+pyspark==3.5.1
+clickhouse-connect==0.7.17
+pandas
+matplotlib
+psycopg2-binary
+sqlalchemy
