@@ -20,7 +20,8 @@ standalone_admin_password.txt
 data/*.csv
 data/*.parquet
 data/*.json
-*.csv
+# Allow sample file for documentation
+!sales_data_sample.csv
 *.parquet
 
 # ClickHouse

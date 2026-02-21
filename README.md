@@ -58,7 +58,8 @@ Pipeline workflow:
 nova_data_task1/
 ├── dags/
 │   └── sales_etl_pipeline.py    # main ETL DAG
-├── data/                         # CSV files
+├── data/                         # CSV files (generated at runtime)
+├── sales_data_sample.csv         # sample data (50 rows)
 ├── logs/                         # airflow logs
 ├── plugins/                      
 ├── config/                       
@@ -68,6 +69,21 @@ nova_data_task1/
 ├── requirements.txt              
 └── README.md                     
 ```
+
+## Data Sample
+
+The pipeline generates 1M sales records dynamically. See [sales_data_sample.csv](sales_data_sample.csv) for data structure example (50 rows).
+
+**Columns:**
+- `sale_id` - unique sale identifier
+- `customer_id` - customer identifier (1-50000)
+- `product_id` - product identifier (1-1000)
+- `quantity` - items purchased (1-10)
+- `sale_date` - date of sale (last 365 days)
+- `sale_amount` - total amount (quantity × price)
+- `region` - customer region (North, South, East, West, Central)
+
+Full CSV files are generated at runtime and excluded from git per .gitignore.
 
 ## Setup
 
@@ -164,15 +180,80 @@ After pipeline runs:
 - **PostgreSQL `sales_aggregated` table**: ~4,000 records (regions × products)
 - **ClickHouse `sales_aggregated` table**: ~4,000 records with import_date
 
-### Sample Analytics Output
+### ClickHouse Analytics Results
 
+**Query 1: Total Sales by Region**
+```sql
+SELECT region, COUNT(*) as products, 
+       SUM(total_sales_count) as total_sales, 
+       ROUND(SUM(total_sales_amount), 2) as revenue 
+FROM sales_db.sales_aggregated 
+GROUP BY region 
+ORDER BY revenue DESC;
 ```
-Region | Product ID | Total Sales | Total Amount | Avg Amount | Rank
--------|------------|-------------|--------------|------------|-----
-North  | 542        | 1,234       | 123,456.78   | 100.05     | 1
-North  | 789        | 1,100       | 98,765.43    | 89.79      | 2
-South  | 234        | 1,567       | 145,678.90   | 92.96      | 1
-...
+
+**Results:**
+```
+Region  Products  Total Sales  Revenue
+------  --------  -----------  ----------------
+South   1,000     375,083      $1,053,972,397.78
+East    1,000     281,158      $788,311,188.41
+North   1,000     250,259      $701,329,336.60
+West    1,000     93,500       $262,930,697.20
+```
+
+**Query 2: Top 5 Products per Region**
+```sql
+SELECT region, product_id, total_sales_count, 
+       ROUND(total_sales_amount, 2) as amount, 
+       rank_in_region 
+FROM sales_db.sales_aggregated 
+WHERE rank_in_region <= 5 
+ORDER BY region, rank_in_region;
+```
+
+**Results:**
+```
+Region  Product  Sales Count  Amount          Rank
+------  -------  -----------  --------------  ----
+East    338      310          $964,524.34     1
+East    647      314          $960,267.65     2
+East    348      319          $953,194.42     3
+East    414      314          $948,749.47     4
+East    860      324          $937,478.53     5
+
+North   578      295          $876,178.13     1
+North   650      287          $873,188.77     2
+North   790      290          $867,814.98     3
+North   848      287          $863,571.22     4
+North   647      284          $863,190.15     5
+
+South   140      416          $1,308,702.74   1
+South   41       414          $1,265,998.60   2
+South   178      433          $1,259,645.74   3
+South   137      426          $1,255,274.74   4
+South   68       406          $1,253,801.57   5
+
+West    320      116          $422,527.38     1
+West    744      120          $410,348.87     2
+West    155      123          $402,549.75     3
+West    995      123          $383,140.83     4
+West    195      115          $363,165.77     5
+```
+
+**Query 3: Data Import Verification**
+```sql
+SELECT COUNT(*) as total_records, 
+       MIN(import_date) as first_import, 
+       MAX(import_date) as last_import 
+FROM sales_db.sales_aggregated;
+```
+
+**Results:**
+```
+Total Records  First Import  Last Import
+-------------  ------------  -----------
+4,000          2026-02-21    2026-02-21
 ```
 
 ## Maintenance
